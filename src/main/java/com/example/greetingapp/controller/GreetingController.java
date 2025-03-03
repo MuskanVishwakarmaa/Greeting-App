@@ -1,5 +1,7 @@
 package com.example.greetingapp.controller;
 
+import com.example.greetingapp.service.GreetingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -9,10 +11,22 @@ import java.util.Map;
 @RequestMapping("/greeting")
 public class GreetingController {
 
+    private final GreetingService greetingService;
+
+    // Constructor-based dependency injection
+    @Autowired
+    public GreetingController(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+
     @GetMapping
     public Map<String, String> getGreeting() {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Hello from GET method");
+
+        // Get greeting message from service
+        String greetingMessage = greetingService.getGreetingMessage();
+
+        response.put("message", greetingMessage);
         return response;
     }
 
