@@ -2,50 +2,38 @@ package com.example.greetingapp.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/greeting")
 public class GreetingController {
 
-    // GET request - returns a greeting message as JSON
     @GetMapping
-    public Greeting getGreeting() {
-        return new Greeting("Hello, this is a GET request!");
+    public Map<String, String> getGreeting() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Hello from GET method");
+        return response;
     }
 
-    // POST request - returns a greeting message as JSON
     @PostMapping
-    public Greeting postGreeting(@RequestBody Greeting greeting) {
-        return new Greeting("Hello, this is a POST request! Received message: " + greeting.getMessage());
+    public Map<String, String> postGreeting() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Hello from POST method");
+        return response;
     }
 
-    // PUT request - returns a greeting message as JSON
     @PutMapping
-    public Greeting putGreeting(@RequestBody Greeting greeting) {
-        return new Greeting("Hello, this is a PUT request! Updated message: " + greeting.getMessage());
+    public Map<String, String> putGreeting() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Hello from PUT method");
+        return response;
     }
 
-    // DELETE request - returns a greeting message as JSON
     @DeleteMapping
-    public Greeting deleteGreeting() {
-        return new Greeting("Hello, this is a DELETE request!");
-    }
-
-    // Inner Greeting class to hold the message in JSON format
-    static class Greeting {
-        private String message;
-
-        public Greeting(String message) {
-            this.message = message;
-        }
-
-        // Getter for message
-        public String getMessage() {
-            return message;
-        }
-
-        // Setter for message
-        public void setMessage(String message) {
-            this.message = message;
-        }
+    public Map<String, String> deleteGreeting() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Hello from DELETE method");
+        return response;
     }
 }
