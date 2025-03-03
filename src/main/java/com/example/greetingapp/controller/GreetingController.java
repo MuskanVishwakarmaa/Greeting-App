@@ -59,12 +59,5 @@ public class GreetingController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE a greeting by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGreeting(@PathVariable Long id) {
-        if (greetingService.deleteGreeting(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
+
 }
