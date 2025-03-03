@@ -15,9 +15,6 @@ public class GreetingService {
     @Autowired
     private GreetingRepository greetingRepository;
 
-    public List<Greeting> getAllGreetings() {
-        return greetingRepository.findAll();
-    }
 
     public Optional<Greeting> getGreetingById(Long id) {
         return greetingRepository.findById(id);

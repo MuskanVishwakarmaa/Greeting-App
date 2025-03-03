@@ -16,12 +16,6 @@ public class GreetingController {
     @Autowired
     private GreetingService greetingService;
 
-    // 1️⃣ GET all greetings
-    @GetMapping
-    public ResponseEntity<List<Greeting>> getAllGreetings() {
-        return ResponseEntity.ok(greetingService.getAllGreetings());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
         Optional<Greeting> greeting = greetingService.getGreetingById(id);
