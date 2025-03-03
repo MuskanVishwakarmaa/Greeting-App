@@ -44,5 +44,12 @@ public class GreetingService {
         });
     }
 
+    public boolean deleteGreeting(Long id) {
+        if (greetingRepository.existsById(id)) {
+            greetingRepository.deleteById(id);  // Delete the greeting by its ID
+            return true;  // Deletion successful
+        }
+        return false;  // Greeting not found
+    }
 
 }

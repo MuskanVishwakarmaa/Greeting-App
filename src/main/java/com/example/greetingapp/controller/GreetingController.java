@@ -53,5 +53,13 @@ public class GreetingController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGreeting(@PathVariable Long id) {
+        boolean isDeleted = greetingService.deleteGreeting(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();  // Successfully deleted
+        }
+        return ResponseEntity.notFound().build();  // Greeting not found
+    }
 
 }
