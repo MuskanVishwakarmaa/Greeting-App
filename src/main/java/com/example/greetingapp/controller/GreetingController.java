@@ -13,18 +13,20 @@ public class GreetingController {
 
     private final GreetingService greetingService;
 
-    // Constructor-based dependency injection
+    // Constructor-based dependency injection for GreetingService
     @Autowired
     public GreetingController(GreetingService greetingService) {
         this.greetingService = greetingService;
     }
 
+    // GET method to return greeting message based on firstName and lastName query parameters
     @GetMapping
-    public Map<String, String> getGreeting() {
+    public Map<String, String> getGreeting(@RequestParam(required = false) String firstName,
+                                           @RequestParam(required = false) String lastName) {
         Map<String, String> response = new HashMap<>();
 
-        // Get greeting message from service
-        String greetingMessage = greetingService.getGreetingMessage();
+        // Call the service to get the greeting message
+        String greetingMessage = greetingService.getGreetingMessage(firstName, lastName);
 
         response.put("message", greetingMessage);
         return response;
