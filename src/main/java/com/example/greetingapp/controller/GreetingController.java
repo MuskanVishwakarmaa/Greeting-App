@@ -1,5 +1,6 @@
 package com.example.greetingapp.controller;
 
+import com.example.greetingapp.GreetingMessage;
 import com.example.greetingapp.entity.Greeting;
 import com.example.greetingapp.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,56 +11,79 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/greeting")
+@RequestMapping("/greetings")
 public class GreetingController {
 
-    @Autowired
-    private GreetingService greetingService;
+    private final GreetingService greetingService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
-        Optional<Greeting> greeting = greetingService.getGreetingById(id);
-        return greeting.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public GreetingController(GreetingService greetingService) {
+        this.greetingService = greetingService;
     }
 
-    // POST a new greeting
+    // UC1: Return JSON for different HTTP Methods
+    @GetMapping("/test")
+    public String getGreetingTest() {
+        return "{\"message\": \"Hello, World!\"}";
+    }
+
+    @PostMapping("/test")
+    public String postGreetingTest() {
+        return "{\"message\": \"Greeting Created!\"}";
+    }
+
+    @PutMapping("/test")
+    public String putGreetingTest() {
+        return "{\"message\": \"Greeting Updated!\"}";
+    }
+
+    @DeleteMapping("/test")
+    public String deleteGreetingTest() {
+        return "{\"message\": \"Greeting Deleted!\"}";
+    }
+
+    // UC2: Get Greeting using Service Layer
+    @GetMapping
+    public String getGreeting() {
+        return "{\"message\": \"" + greetingService.getGreetingMessage() + "\"}";
+    }
+
+    // UC3: Get Greeting with Name Parameters
+    @GetMapping("/custom")
+    public String getPersonalizedGreeting(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName) {
+        return "{\"message\": \"" + greetingService.getGreetingMessage(firstName, lastName) + "\"}";
+    }
+
+    // UC4: Save Greeting in Repository
     @PostMapping
-    public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting greeting) {
-        return ResponseEntity.ok(greetingService.createGreeting(greeting));
+    public GreetingMessage addGreeting(@RequestParam String message) {
+        return greetingService.saveGreeting(message);
     }
 
-    // 3️⃣ POST - Create multiple greetings (Bulk Create)
-    @PostMapping("/batch")
-    public ResponseEntity<List<Greeting>> createMultipleGreetings(@RequestBody List<Greeting> greetings) {
-        List<Greeting> savedGreetings = greetingService.saveMultipleGreetings(greetings);
-        return ResponseEntity.ok(savedGreetings);
+    // UC5: Find Greeting by ID
+    @GetMapping("/{id}")
+    public Optional<GreetingMessage> getGreetingById(@PathVariable Long id) {
+        return greetingService.findGreetingById(id);
     }
 
-
-    // PUT to update (replace) a greeting
+    // UC6: List All Greetings
+    @GetMapping("/all")
+    public List<GreetingMessage> getAllGreetings() {
+        return greetingService.getAllGreetings();
+    }
+    // UC7: Update a Greeting by ID
     @PutMapping("/{id}")
-    public ResponseEntity<Greeting> updateGreeting(@PathVariable Long id, @RequestBody Greeting updatedGreeting) {
-        Optional<Greeting> updated = greetingService.updateGreeting(id, updatedGreeting);
-        return updated.map(ResponseEntity::ok)
+    public ResponseEntity<GreetingMessage> updateGreeting(@PathVariable Long id, @RequestParam String message) {
+        return greetingService.updateGreeting(id, message)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    // PATCH to partially update a greeting
-    @PatchMapping("/{id}")
-    public ResponseEntity<Greeting> patchGreeting(@PathVariable Long id, @RequestBody Greeting patchData) {
-        Optional<Greeting> patched = greetingService.patchGreeting(id, patchData);
-        return patched.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    // UC8: Delete a Greeting by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGreeting(@PathVariable Long id) {
-        boolean isDeleted = greetingService.deleteGreeting(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();  // Successfully deleted
-        }
-        return ResponseEntity.notFound().build();  // Greeting not found
+        return greetingService.deleteGreeting(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
+
 
 }
