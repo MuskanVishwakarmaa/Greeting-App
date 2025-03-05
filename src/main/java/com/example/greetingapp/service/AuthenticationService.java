@@ -14,6 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 
 @Service
 public class AuthenticationService {
