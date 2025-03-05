@@ -4,6 +4,7 @@ import com.example.greetingapp.DTO.LoginDTO;
 import com.example.greetingapp.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,18 @@ public class AuthenticationController {
     @Autowired
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
+        String jwtToken = token.substring(7); // Remove 'Bearer ' prefix
+        boolean isValid = authenticationService.validateJwtToken(jwtToken, "expected-username");
+
+        if (isValid) {
+            return ResponseEntity.ok("Token is valid");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
 
     @PostMapping("/register")
